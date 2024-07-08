@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.filedialog
 import threading
 import time
 from tkinter import messagebox
@@ -28,7 +29,7 @@ class WritingApp(tk.Frame):
         self.end_button = tk.Button(self.frame, text="終わり！", bg="#c0c0c0", fg="black", width=10, command=self.finish_timer)
         self.end_button.grid(column=1, row=3, pady=5)
 
-        self.save_button = tk.Button(self.frame, text="保存する", bg="#c0c0c0", fg="black", width=10)
+        self.save_button = tk.Button(self.frame, text="保存する", bg="#c0c0c0", fg="black", width=10, command=self.save_text)
         self.save_button.grid(column=1, row=4)
 
         # タイマー用変数
@@ -53,9 +54,11 @@ class WritingApp(tk.Frame):
         while self.flag:
             time.sleep(1)  # 1秒待機
             self.second -= 1
-            if 6 > self.second >= 0:
+            # タイマー残りが5秒以下になったら表示
+            if 6 > self.second >= 0 and self.flag:
                 self.timer_label.configure(text=self.second)
             elif self.second < 0:
+                # 0秒以下になると入力テキストを全部消す
                 self.text.delete("1.0", tk.END)
                 self.timer_label.configure(text="")
 
@@ -65,10 +68,25 @@ class WritingApp(tk.Frame):
     def finish_timer(self):
         self.flag = False
         self.timer_label.configure(text="")
+        text_cont = len(self.text.get(0., tk.END)) - 1
+        messagebox.showinfo("終了です", f"お疲れ様でした！\n打った文字数は{str(text_cont)}文字でした。")
+
+    def save_text(self, event=None):
+        """テキストに名前を付けて保存する"""
+        f_type = [("Text", ".txt")]
+
+        file_path = tkinter.filedialog.asksaveasfilename(filetypes=f_type, defaultextension=".txt")
+
+        if file_path != "":
+            with open(file_path, "w") as f:
+                f.write(self.text.get("1.0", "end-1c"))
+
+        return
 
 if __name__ == "__main__":
     root = tk.Tk()
     # デフォルトの背景色を変更
     root.tk_setPalette(background="#252525")
+    root.title("鬼ライティングアプリ")
     app = WritingApp(master=root)
     app.mainloop()
