@@ -33,8 +33,8 @@ class WritingApp(tk.Frame):
 
         # タイマー用変数
         self.second = 10
-        self.flag = True
-        self.t = None
+        self.flag = False  # フラグを初期化
+        self.t = None # スレッドの初期化
 
     def start_timer(self):
         # 既存のスレッドがあれば停止する
@@ -43,26 +43,24 @@ class WritingApp(tk.Frame):
             self.t.join() # スレッドの終了を待つ
 
         # スレッド処理
-        self.t = threading.Thread(target=self.timer)
         self.flag = True
+        self.t = threading.Thread(target=self.timer)
         self.second = 10
         self.timer_label.configure(text="")
         self.t.start()
 
     def timer(self):
         while self.flag:
+            time.sleep(1)  # 1秒待機
             self.second -= 1
-            if 6 > self.second > -1:
+            if 6 > self.second >= 0:
                 self.timer_label.configure(text=self.second)
-            if self.second == 0:
+            elif self.second < 0:
                 self.text.delete("1.0", tk.END)
-                self.finish_timer()
-            time.sleep(1)
+                self.timer_label.configure(text="")
 
     def reset_timer(self, event):
         self.second = 10
-        self.start_timer()
-
 
     def finish_timer(self):
         self.flag = False
