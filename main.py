@@ -1,8 +1,8 @@
 import tkinter as tk
 import tkinter.filedialog
-import threading
 import time
 from tkinter import messagebox
+from thread import CustomThread
 
 class WritingApp(tk.Frame):
     # text Widgetに関する情報を格納する変数
@@ -44,9 +44,15 @@ class WritingApp(tk.Frame):
 
         # 最初のキーが入力されたらタイマー開始
         if len(self.key_list) == 1:
+            # スレッドがあれば終了させる
+            if self.t:
+                if self.t.is_alive():
+                    print("finish")
+                    self.t.raise_exception()
+
             # スレッド処理
             self.flag = True
-            self.t = threading.Thread(target=self.timer)
+            self.t = CustomThread(target=self.timer)
             self.second = 10
             self.timer_label.configure(text="")
             self.t.start()
@@ -71,6 +77,7 @@ class WritingApp(tk.Frame):
         # タイマー終了
         self.flag = False
         self.timer_label.configure(text="")
+        self.key_list = []
 
         text_cont = len(self.text.get(0., tk.END)) - 1
         response = messagebox.askquestion("終了です", f"お疲れ様でした！\n打った文字数は{str(text_cont)}文字でした。\n保存しますか？")
