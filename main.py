@@ -47,7 +47,6 @@ class WritingApp(tk.Frame):
             # スレッドがあれば終了させる
             if self.t:
                 if self.t.is_alive():
-                    print("finish")
                     self.t.raise_exception()
 
             # スレッド処理
