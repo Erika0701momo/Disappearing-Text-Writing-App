@@ -11,7 +11,7 @@ class WritingApp(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
 
-        self.master.geometry("590x510")
+        self.master.geometry("590x500")
         self.frame = tk.Frame(self.master)
         # timer_labelでウィンドウが広がらないようにする
         self.frame.grid(padx=20)
@@ -21,34 +21,38 @@ class WritingApp(tk.Frame):
 
         self.text = tk.Text(self.frame, bg="#202020", fg="white", font=("Meiryo",12), width=50, height=15, relief=tk.GROOVE, bd=20)
         self.text.grid(column=1, row=0)
-        self.text.bind_all("<KeyPress>", self.reset_timer)
-
-        self.start_button = tk.Button(self.frame, text="スタート！", bg="#c0c0c0", fg="black", width=10, command=self.start_timer)
-        self.start_button.grid(column=1, row=2, pady=2)
+        self.text.bind_all("<KeyPress>", self.start_and_reset_timer)
 
         self.end_button = tk.Button(self.frame, text="終わり！", bg="#c0c0c0", fg="black", width=10, command=self.finish_timer)
-        self.end_button.grid(column=1, row=3, pady=5)
+        self.end_button.grid(column=1, row=2, pady=5)
 
         self.save_button = tk.Button(self.frame, text="保存する", bg="#c0c0c0", fg="black", width=10, command=self.save_text)
-        self.save_button.grid(column=1, row=4)
+        self.save_button.grid(column=1, row=3)
 
         # タイマー用変数
         self.second = 10
         self.flag = False  # フラグを初期化
         self.t = None # スレッドの初期化
 
-    def start_timer(self):
-        # 既存のスレッドがあれば停止する
-        if self.t and self.t.is_alive():
-            self.flag = False
-            self.t.join() # スレッドの終了を待つ
+        # 入力されたキーを格納するリスト
+        self.key = []
 
-        # スレッド処理
-        self.flag = True
-        self.t = threading.Thread(target=self.timer)
-        self.second = 10
-        self.timer_label.configure(text="")
-        self.t.start()
+    def start_and_reset_timer(self, event):
+        # 入力されたキーを取得
+        key = event.keysym
+        self.key.append(key)
+
+        # 最初のキーが入力されたらタイマー開始
+        if len(self.key) == 1:
+            # スレッド処理
+            self.flag = True
+            self.t = threading.Thread(target=self.timer)
+            self.second = 10
+            self.timer_label.configure(text="")
+            self.t.start()
+        else:
+            # タイマーをリセット
+            self.second = 10
 
     def timer(self):
         while self.flag:
@@ -61,9 +65,6 @@ class WritingApp(tk.Frame):
                 # 0秒以下になると入力テキストを全部消す
                 self.text.delete("1.0", tk.END)
                 self.timer_label.configure(text="")
-
-    def reset_timer(self, event):
-        self.second = 10
 
     def finish_timer(self):
         self.flag = False
