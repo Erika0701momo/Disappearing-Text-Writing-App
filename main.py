@@ -21,12 +21,12 @@ class WritingApp(tk.Frame):
 
         self.text = tk.Text(self.frame, bg="#202020", fg="white", font=("Meiryo",12), width=50, height=15, relief=tk.GROOVE, bd=20)
         self.text.grid(column=1, row=0)
-        self.text.bind_all("<KeyPress>", self.start_and_reset_timer)
+        self.text.bind_all("<KeyPress>", self.resume)
 
         self.description_label = tk.Label(self.frame, text="文字を入力して開始", font=("Meiryo"))
         self.description_label.grid(column=1, row=2)
 
-        self.end_button = tk.Button(self.frame, text="終わり！", bg="#c0c0c0", fg="black", width=10, command=self.finish_timer_and_save_text)
+        self.end_button = tk.Button(self.frame, text="終わり！", bg="#c0c0c0", fg="black", width=10, command=self.finish)
         self.end_button.grid(column=1, row=3, pady=10)
 
         # タイマー用変数
@@ -37,7 +37,7 @@ class WritingApp(tk.Frame):
         # 入力されたキーを格納するリスト
         self.key_list = []
 
-    def start_and_reset_timer(self, event):
+    def resume(self, event):
         # 入力されたキーを取得
         key = event.keysym
         self.key_list.append(key)
@@ -53,6 +53,7 @@ class WritingApp(tk.Frame):
         else:
             # タイマーをリセット
             self.second = 10
+            self.timer_label.configure(text="")
 
     def timer(self):
         while self.flag:
@@ -66,7 +67,7 @@ class WritingApp(tk.Frame):
                 self.text.delete("1.0", tk.END)
                 self.timer_label.configure(text="")
 
-    def finish_timer_and_save_text(self):
+    def finish(self):
         # タイマー終了
         self.flag = False
         self.timer_label.configure(text="")
