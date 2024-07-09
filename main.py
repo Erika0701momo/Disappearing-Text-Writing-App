@@ -94,6 +94,9 @@ class WritingApp(tk.Frame):
         else:
             pass
 
+        # テキストを消す
+        self.text.delete("1.0", tk.END)
+
 if __name__ == "__main__":
     root = tk.Tk()
     # デフォルトの背景色を変更
