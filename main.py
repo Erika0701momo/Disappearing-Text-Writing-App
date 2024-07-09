@@ -23,11 +23,11 @@ class WritingApp(tk.Frame):
         self.text.grid(column=1, row=0)
         self.text.bind_all("<KeyPress>", self.start_and_reset_timer)
 
-        self.end_button = tk.Button(self.frame, text="終わり！", bg="#c0c0c0", fg="black", width=10, command=self.finish_timer)
-        self.end_button.grid(column=1, row=2, pady=5)
+        self.description_label = tk.Label(self.frame, text="文字を入力して開始", font=("Meiryo"))
+        self.description_label.grid(column=1, row=2)
 
-        self.save_button = tk.Button(self.frame, text="保存する", bg="#c0c0c0", fg="black", width=10, command=self.save_text)
-        self.save_button.grid(column=1, row=3)
+        self.end_button = tk.Button(self.frame, text="終わり！", bg="#c0c0c0", fg="black", width=10, command=self.finish_timer_and_save_text)
+        self.end_button.grid(column=1, row=3, pady=10)
 
         # タイマー用変数
         self.second = 10
@@ -35,15 +35,15 @@ class WritingApp(tk.Frame):
         self.t = None # スレッドの初期化
 
         # 入力されたキーを格納するリスト
-        self.key = []
+        self.key_list = []
 
     def start_and_reset_timer(self, event):
         # 入力されたキーを取得
         key = event.keysym
-        self.key.append(key)
+        self.key_list.append(key)
 
         # 最初のキーが入力されたらタイマー開始
-        if len(self.key) == 1:
+        if len(self.key_list) == 1:
             # スレッド処理
             self.flag = True
             self.t = threading.Thread(target=self.timer)
@@ -66,23 +66,25 @@ class WritingApp(tk.Frame):
                 self.text.delete("1.0", tk.END)
                 self.timer_label.configure(text="")
 
-    def finish_timer(self):
+    def finish_timer_and_save_text(self):
+        # タイマー終了
         self.flag = False
         self.timer_label.configure(text="")
+
         text_cont = len(self.text.get(0., tk.END)) - 1
-        messagebox.showinfo("終了です", f"お疲れ様でした！\n打った文字数は{str(text_cont)}文字でした。")
+        response = messagebox.askquestion("終了です", f"お疲れ様でした！\n打った文字数は{str(text_cont)}文字でした。\n保存しますか？")
 
-    def save_text(self, event=None):
-        """テキストに名前を付けて保存する"""
-        f_type = [("Text", ".txt")]
+        # メッセージボックス"はい"クリックならテキストに名前を付けて保存
+        if response == "yes":
+            f_type = [("Text", ".txt")]
 
-        file_path = tkinter.filedialog.asksaveasfilename(filetypes=f_type, defaultextension=".txt")
+            file_path = tkinter.filedialog.asksaveasfilename(filetypes=f_type, defaultextension=".txt")
 
-        if file_path != "":
-            with open(file_path, "w") as f:
-                f.write(self.text.get("1.0", "end-1c"))
-
-        return
+            if file_path != "":
+                with open(file_path, "w") as f:
+                    f.write(self.text.get("1.0", "end-1c"))
+        else:
+            pass
 
 if __name__ == "__main__":
     root = tk.Tk()
