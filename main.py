@@ -21,7 +21,8 @@ class WritingApp(tk.Frame):
 
         self.text = tk.Text(self.frame, bg="#202020", fg="white", font=("Meiryo",12), width=50, height=15, relief=tk.GROOVE, bd=20)
         self.text.grid(column=1, row=0)
-        self.text.bind_all("<KeyPress>", self.resume)
+        self.text.bind("<KeyPress>", self.resume)
+        self.text.focus_set()
 
         self.description_label = tk.Label(self.frame, text="文字を入力して開始", font=("Meiryo"))
         self.description_label.grid(column=1, row=2)
