@@ -24,8 +24,9 @@ Pythonに標準で組み込まれているGUIライブラリである、tkinter�
 # 実行方法
 - まず、こちらのURLよりPython 3.12系をダウンロードします。https://www.python.org/downloads/<br>
   ※「Add Python to PATH」にチェックを入れることで環境変数を自動設定します。
-- 次に、こちらのコマンドで任意のフォルダにリポジトリをクローンします。``
-- 最後に、ターミナルで `python main.py`(もしくはpython3)を実行するとアプリが立ち上がります。
+- 次に、こちらのコマンドで任意のフォルダにリポジトリをクローンします。`git clone https://github.com/Erika0701momo/Disappearing-Text-Writing-App.git`
+- 次に、こちらのコマンドでプロジェクトフォルダに移動します。`cd Disappearing-Text-Writing-App`
+- 最後に、`python main.py`(もしくは`python3 main.py`)を実行するとアプリが立ち上がります。
 # 苦労したところ
 - カウントダウンタイマーの動作です。スレッドを使いタイマーを動作させましたが、スレッドを量産してしまいタイマーの動きがおかしくなったり、それを解決したら今度は文字入力が遅くなりました。<br>
 スレッドを強制終了させることで解決に至りました。スレッドを理解することは困難でした。
