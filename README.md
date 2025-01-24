@@ -11,12 +11,10 @@ Udemyの動画講座「100 Days of Code: The Complete Python Pro Bootcamp」の�
 文章が消されないように、強制的にライティングさせるという意図のGUIライティングアプリです。<br>
 Pythonに標準で組み込まれているGUIライブラリである、tkinterを使用しました。
 # 使用技術
-- Python 3.12
 - tkinter
 - threading(スレッドを使った並行処理をサポートするためのPythonの標準モジュール)
 # 開発環境
-- Windows 10 pro ver.22H2
-- PyCharm
+- Python 3.12
 # 開発期間
 約5日
 # 機能一覧
@@ -24,15 +22,6 @@ Pythonに標準で組み込まれているGUIライブラリである、tkinter�
 - 10秒間文字入力が無ければ打ってきた文章を削除する機能
 - 「終わり」ボタンをクリックすると入力文字数を表示し、入力内容をPCに保存する機能
 # インストールから使用まで
-- GitHubからインストールします。
-- エディタのターミナルで、 `$ python -m venv .venv`(もしくはpython3)とタイプし仮想環境を作ります。
-- 仮想環境をアクティベートします。
-  - Linuxをお使いの場合
-    - `$ source .venv/bin/activate` または
-    - `$ . .venv/bin/activate`
-  - Windowsをお使いの場合
-    - `$ .venv\Scripts\Activate` または
-    - `$ .\.venv\Scripts\activate`
 - 最後に、ターミナルで `python main.py`(もしくはpython3)を実行するとアプリが立ち上がります。
 # 苦労したところ
 - カウントダウンタイマーの動作です。スレッドを使いタイマーを動作させましたが、スレッドを量産してしまいタイマーの動きがおかしくなったり、それを解決したら今度は文字入力が遅くなりました。<br>
